@@ -8,7 +8,7 @@ RewriteCond %{REQUEST_FILENAME} !-d
 
 RewriteRule ^(.*)$ index.php
 
-# Попробуйте эту настройку .htaccess, если у Вас возникли проблемы с отображением
+# настройка .htaccess, если возникли проблемы с отображением
 # стилей css
 #AddDefaultCharset cp-1251
 #ErrorDocument 404 / 
