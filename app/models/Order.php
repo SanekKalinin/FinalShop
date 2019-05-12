@@ -15,7 +15,7 @@ class Order
      * @param array $products <p>Массив с товарами</p>
      * @return boolean <p>Результат выполнения метода</p>
      */
-    public static function save($userName, $userPhone, $userComment, $userId, $products)
+    public function save($userName, $userPhone, $userComment, $userId, $products)
     {
         // Соединение с БД
         $db = Db::getConnection();
@@ -40,7 +40,7 @@ class Order
      * Возвращает список заказов
      * @return array <p>Список заказов</p>
      */
-    public static function getOrdersList()
+    public function getOrdersList()
     {
         // Соединение с БД
         $db = Db::getConnection();
@@ -89,7 +89,7 @@ class Order
      * @param integer $id <p>id</p>
      * @return array <p>Массив с информацией о заказе</p>
      */
-    public static function getOrderById($id)
+    public function getOrderById($id)
     {
         // Соединение с БД
         $db = Db::getConnection();
@@ -115,7 +115,7 @@ class Order
      * @param integer $id <p>id заказа</p>
      * @return boolean <p>Результат выполнения метода</p>
      */
-    public static function deleteOrderById($id)
+    public function deleteOrderById($id)
     {
         // Соединение с БД
         $db = Db::getConnection();
@@ -139,7 +139,7 @@ class Order
      * @param integer $status <p>Статус <i>(включено "1", выключено "0")</i></p>
      * @return boolean <p>Результат выполнения метода</p>
      */
-    public static function updateOrderById($id, $userName, $userPhone, $userComment, $date, $status)
+    public function updateOrderById($id, $userName, $userPhone, $userComment, $date, $status)
     {
         // Соединение с БД
         $db = Db::getConnection();

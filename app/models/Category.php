@@ -10,7 +10,7 @@ class Category
      * Возвращает массив категорий для списка на сайте
      * @return array <p>Массив с категориями</p>
      */
-    public static function getCategoriesList()
+    public function getCategoriesList()
     {
         // Соединение с БД
         $db = Db::getConnection();
@@ -34,7 +34,7 @@ class Category
      * (при этом в результат попадают и включенные и выключенные категории)
      * @return array <p>Массив категорий</p>
      */
-    public static function getCategoriesListAdmin()
+    public function getCategoriesListAdmin()
     {
         // Соединение с БД
         $db = Db::getConnection();
@@ -60,7 +60,7 @@ class Category
      * @param integer $id
      * @return boolean <p>Результат выполнения метода</p>
      */
-    public static function deleteCategoryById($id)
+    public function deleteCategoryById($id)
     {
         // Соединение с БД
         $db = Db::getConnection();
@@ -82,7 +82,7 @@ class Category
      * @param integer $status <p>Статус <i>(включено "1", выключено "0")</i></p>
      * @return boolean <p>Результат выполнения метода</p>
      */
-    public static function updateCategoryById($id, $userName, $sortOrder, $status)
+    public function updateCategoryById($id, $userName, $sortOrder, $status)
     {
         // Соединение с БД
         $db = Db::getConnection();
@@ -109,7 +109,7 @@ class Category
      * @param integer $id <p>id категории</p>
      * @return array <p>Массив с информацией о категории</p>
      */
-    public static function getCategoryById($id)
+    public function getCategoryById($id)
     {
         // Соединение с БД
         $db = Db::getConnection();
@@ -156,7 +156,7 @@ class Category
      * @param integer $status <p>Статус <i>(включено "1", выключено "0")</i></p>
      * @return boolean <p>Результат добавления записи в таблицу</p>
      */
-    public static function createCategory($userName, $sortOrder, $status)
+    public function createCategory($userName, $sortOrder, $status)
     {
         // Соединение с БД
         $db = Db::getConnection();

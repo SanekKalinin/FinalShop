@@ -12,7 +12,7 @@ class Cart
      * @param int $id <p>id товара</p>
      * @return integer <p>Количество товаров в корзине</p>
      */
-    public static function addProduct($id)
+    public function addProduct($id)
     {
         // Приводим $id к типу integer
         $id = intval($id);
@@ -68,7 +68,7 @@ class Cart
      * Если товаров нет, возвращает false;
      * @return mixed: boolean or array
      */
-    public static function getProducts()
+    public function getProducts()
     {
         if (isset($_SESSION['products'])) {
             return $_SESSION['products'];
@@ -81,7 +81,7 @@ class Cart
      * @param array $products <p>Массив с информацией о товарах</p>
      * @return integer <p>Общая стоимость</p>
      */
-    public static function getTotalPrice($products)
+    public function getTotalPrice($products)
     {
         // Получаем массив с идентификаторами и количеством товаров в корзине
         $productsInCart = self::getProducts();
@@ -103,7 +103,7 @@ class Cart
     /**
      * Очищает корзину
      */
-    public static function clear()
+    public function clear()
     {
         if (isset($_SESSION['products'])) {
             unset($_SESSION['products']);
@@ -114,7 +114,7 @@ class Cart
      * Удаляет товар с указанным id из корзины
      * @param integer $id <p>id товара</p>
      */
-    public static function deleteProduct($id)
+    public function deleteProduct($id)
     {
         // Получаем массив с идентификаторами и количеством товаров в корзине
         $productsInCart = self::getProducts();

@@ -15,7 +15,7 @@ class Product
      * @param type $page [optional] <p>Номер текущей страницы</p>
      * @return array <p>Массив с товарами</p>
      */
-    public static function getLatestProducts($count = self::SHOW_BY_DEFAULT)
+    public function getLatestProducts($count = self::SHOW_BY_DEFAULT)
     {
         // Соединение с БД
         $db = Db::getConnection();
@@ -54,7 +54,7 @@ class Product
      * @param type $page [optional] <p>Номер страницы</p>
      * @return type <p>Массив с товарами</p>
      */
-    public static function getProductsListByCategory($categoryId, $page = 1)
+    public function getProductsListByCategory($categoryId, $page = 1)
     {
         $limit = Product::SHOW_BY_DEFAULT;
         // Смещение (для запроса)
@@ -95,7 +95,7 @@ class Product
      * @param integer $id <p>id товара</p>
      * @return array <p>Массив с информацией о товаре</p>
      */
-    public static function getProductById($id)
+    public function getProductById($id)
     {
         // Соединение с БД
         $db = Db::getConnection();
@@ -122,7 +122,7 @@ class Product
      * @param integer $categoryId
      * @return integer
      */
-    public static function getTotalProductsInCategory($categoryId)
+    public function getTotalProductsInCategory($categoryId)
     {
         // Соединение с БД
         $db = Db::getConnection();
@@ -147,7 +147,7 @@ class Product
      * @param array $idsArray <p>Массив с идентификаторами</p>
      * @return array <p>Массив со списком товаров</p>
      */
-    public static function getProdustsByIds($idsArray)
+    public function getProdustsByIds($idsArray)
     {
         // Соединение с БД
         $db = Db::getConnection();
@@ -180,7 +180,7 @@ class Product
      * Возвращает список рекомендуемых товаров
      * @return array <p>Массив с товарами</p>
      */
-    public static function getRecommendedProducts()
+    public function getRecommendedProducts()
     {
         // Соединение с БД
         $db = Db::getConnection();
@@ -205,7 +205,7 @@ class Product
      * Возвращает список товаров
      * @return array <p>Массив с товарами</p>
      */
-    public static function getProductsList()
+    public function getProductsList()
     {
         // Соединение с БД
         $db = Db::getConnection();
@@ -229,7 +229,7 @@ class Product
      * @param integer $id <p>id товара</p>
      * @return boolean <p>Результат выполнения метода</p>
      */
-    public static function deleteProductById($id)
+    public function deleteProductById($id)
     {
         // Соединение с БД
         $db = Db::getConnection();
@@ -249,7 +249,7 @@ class Product
      * @param array $options <p>Массив с информацей о товаре</p>
      * @return boolean <p>Результат выполнения метода</p>
      */
-    public static function updateProductById($id, $options)
+    public function updateProductById($id, $options)
     {
         // Соединение с БД
         $db = Db::getConnection();
@@ -290,7 +290,7 @@ class Product
      * @param array $options <p>Массив с информацией о товаре</p>
      * @return integer <p>id добавленной в таблицу записи</p>
      */
-    public static function createProduct($options)
+    public function createProduct($options)
     {
         // Соединение с БД
         $db = Db::getConnection();
