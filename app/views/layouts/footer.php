@@ -6,7 +6,7 @@
         <div class="container">
             <div class="row">
                 <p class="pull-left">Copyright © 2019</p>
-                <p class="pull-right">ФИНАЛЬНЫЙ ПРОЕКТ "МАГАЗИН"</p>
+                <p class="pull-right">ФИНАЛЬНЫЙ ПРОЕКТ "МАГАЗИН" </p>
             </div>
         </div>
     </div>

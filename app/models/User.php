@@ -8,30 +8,55 @@ class User
 
     // Регистрация пользователя 
      
-    public function register($userName, $email, $password)
+    public function register($userName, $email, $password,$firstName,$lastName)
     {
         // Соединение с БД
         $db = Db::getConnection();
         $salt=random_int(0, PHP_INT_MAX);
         $hashPass=md5($userName.$password.$salt);
+        $reg_tocken=md5(time());
         // Текст запроса к БД
-        $sql = 'INSERT INTO user (username, email, salt, hash) '
-                . 'VALUES (:userName, :email, :salt, :hashPass)';
+        $sql = 'INSERT INTO user (username, firstName, lastName, email, reg_tocken, salt, hash) '
+                . 'VALUES (:userName,:firstName, :lastName, :email,:reg_tocken, :salt, :hashPass)';
 
         // Получение и возврат результатов. Используется подготовленный запрос
         $result = $db->prepare($sql);
         $result->bindParam(':userName', $userName, PDO::PARAM_STR);
+        $result->bindParam(':firstName', $firstName, PDO::PARAM_STR);
+        $result->bindParam(':lastName', $lastName, PDO::PARAM_STR);
         $result->bindParam(':email', $email, PDO::PARAM_STR);
+        $result->bindParam(':reg_tocken', $reg_tocken, PDO::PARAM_STR);
         $result->bindParam(':salt', $salt, PDO::PARAM_STR);
         $result->bindParam(':hashPass', $hashPass, PDO::PARAM_STR);
-        
+        mail($email,'Завершение регистрации','Для завершения регистрации перейдите по ссылке http://shop/user='.$reg_tocken);
         try {
         return $result->execute(); }
         catch(PDOException $e) {  
             echo $e->getMessage();  
                     }
     }
+    // подтверждение регистрации
+    public function registerValidation($reg_tocken,$userID) {
+        $db = Db::getConnection();
+        // готовим запрос
+        $sql = 'SELECT :reg_tocken FROM user WHERE userID = :userID';
+        
+        // Получение результатов. Используется подготовленный запрос
+        $result = $db->prepare($sql);
+        $result->bindParam(':reg_tocken', $reg_tocken, PDO::PARAM_STR);
+        $result->bindParam(':userID', $userID, PDO::PARAM_STR);
+        try {
+            $result->execute();}
+            catch(PDOException $e) {  
+                echo $e->getMessage();  
+                        }
+            $user = $result->fetch();
+            if ($reg_tocken==$user['reg_tocken']) {
+            return true; } 
+            else return false;
+            
 
+    }
     /**
      * Редактирование данных пользователя
      * @param integer $id <p>id пользователя</p>
@@ -109,8 +134,25 @@ class User
      */
     public function auth($userId)
     {
+         // Соединение с БД
+         $db = Db::getConnection();
+         
+         // Текст запроса к БД
+         $sql = 'SELECT username, email,firstName, lastName, tocken FROM user WHERE userID = :userID' ;
+ 
+         // Получение и возврат результатов. Используется подготовленный запрос
+         $result = $db->prepare($sql);
+         $result->bindParam(':userID', $userID, PDO::PARAM_STR);
+         
+         try {
+            $result->execute();
+            $_SESSION[] = $result->fetch();
+            setcookie("userTocken",$_SESSION['tocken'],time()+360000,$httponly=true); }
+         catch(PDOException $e) {  
+             echo $e->getMessage();  
+                     }
         // Записываем идентификатор пользователя в сессию
-        $_SESSION['user'] = $userId;
+        
     }
 
     /**

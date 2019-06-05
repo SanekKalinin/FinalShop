@@ -7,9 +7,8 @@ error_reporting(E_ALL);
 session_start();
 
 // Подключение файлов системы
-define('BASEPATH', dirname(__FILE__));
+define('BASEPATH', __DIR__);
 require_once(BASEPATH.'/framework/Autoload.php');
-
 
 // Вызов Router
 $router = new Router();

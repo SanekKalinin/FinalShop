@@ -18,6 +18,7 @@ class Router
      */
     public function __construct()
     {
+        
         // Путь к файлу с роутами
         $routesPath = BASEPATH . '/app/config/routes_config.php';
 
@@ -45,13 +46,14 @@ class Router
 
         // Проверяем наличие такого запроса в массиве маршрутов (routes_config.php)
         foreach ($this->routes as $uriPattern => $path) {
+            
 
-            // Сравниваем $uriPattern и $uri
+            // Ищем $uriPattern в $uri
             if (preg_match("~$uriPattern~", $uri)) {
 
                 // Получаем внутренний путь из внешнего согласно правилу.
                 $internalRoute = preg_replace("~$uriPattern~", $path, $uri);
-
+                
                 // Определить контроллер, action, параметры
 
                 $segments = explode('/', $internalRoute);
@@ -69,7 +71,7 @@ class Router
 
                 if (file_exists($controllerFile)) {
                     include_once($controllerFile);
-                }
+                } else {include_once(BASEPATH.'app/views/layouts/404.php');}
 
                 // Создать объект, вызвать метод (т.е. action)
                 $controllerObject = new $controllerName;

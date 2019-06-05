@@ -24,10 +24,13 @@ class UserController
         // $model = User::model();  так в каком-то фрэймворке
        // $user= new User();
         // Переменные для формы
+        $firstName=false;
+        $lastName=false;
         $userName = false;
         $email = false;
         $password = false;
         $result = false;
+        
 
         // Обработка формы
         if (isset($_POST['submit'])) {
@@ -57,7 +60,7 @@ class UserController
             if ($errors == false) {
                 // Если ошибок нет
                 // Регистрируем пользователя
-                $result = $this->user->register($userName, $email, $password);
+                $result = $this->user->register($firstName, $lastName, $userName, $email, $password);
             }
         }
 
@@ -65,7 +68,13 @@ class UserController
         require_once(BASEPATH . '/app/views/user/register.php');
         return true;
     }
-    
+    // action для проверки регистрации
+    public function actionRegisterValidation() {
+    if (isset($_GET['reg_tocken'])) {
+       // $userID=$this->user->;
+        //registerValidation($_GET['reg_tocken'];$userID);
+    }
+    }
     /**
      * Action для страницы "Вход на сайт"
      */

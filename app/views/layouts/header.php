@@ -57,7 +57,7 @@
                                     <ul class="nav navbar-nav">
                                         <li><a href="/cart">
                                                 <i class="fa fa-shopping-cart"></i> Корзина 
-                                                (<span id="cart-count"><?php echo Cart::countItems(); ?></span>)
+                                                (<span id="cart-count"><?php Cart::countItems();?></span>)
                                             </a>
                                         </li>
                                         <?php if (User::isGuest()): ?>                                        
@@ -66,7 +66,7 @@
                                         <?php else: ?>
                                             <li><a href="/cabinet/"><i class="fa fa-user"></i> Аккаунт</a></li>
                                             <li><a href="/user/logout/"><i class="fa fa-unlock"></i> Выход</a></li>
-                                        <?php endif; ?>
+                                        <?php endif;?>
                                     </ul>
                                 </div>
                             </div>
@@ -86,7 +86,9 @@
                                         <span class="icon-bar"></span>
                                     </button>
                                 </div>
-                                <div class="mainmenu pull-left">
+                                
+                                 <div class="mainmenu pull-left">
+                                 
                                     <ul class="nav navbar-nav collapse navbar-collapse">
                                         <li><a href="/">Главная</a></li>
                                         <li class="dropdown"><a href="#">Магазин<i class="fa fa-angle-down"></i></a>
