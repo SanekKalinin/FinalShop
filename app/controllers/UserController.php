@@ -29,9 +29,7 @@ class UserController
         $userName = false;
         $email = false;
         $password = false;
-        $result = false;
-        
-
+        $result=false;
         // Обработка формы
         if (isset($_POST['submit'])) {
             // Если форма отправлена 
@@ -39,7 +37,8 @@ class UserController
             $userName = $_POST['userName'];
             $email = $_POST['email'];
             $password = $_POST['password'];
-
+            $firstName=$_POST['firstName'];
+            $lastName=$_POST['lastName'];
             // Флаг ошибок
             $errors = false;
 
@@ -60,7 +59,7 @@ class UserController
             if ($errors == false) {
                 // Если ошибок нет
                 // Регистрируем пользователя
-                $result = $this->user->register($firstName, $lastName, $userName, $email, $password);
+                $result = $this->user->register($userName, $email,$firstName,$lastName,$password);
             }
         }
 
@@ -106,7 +105,7 @@ class UserController
 
             // Проверяем существует ли пользователь
             $userId = $this->user->userValidation($email, $password);
-
+            
             if ($userId == false) {
                 // Если данные неправильные - показываем ошибку
                 $errors[] = 'Неправильные данные для входа на сайт';
@@ -133,7 +132,7 @@ class UserController
         session_start();
         
         // Удаляем информацию о пользователе из сессии
-        unset($_SESSION["user"]);
+        unset($_SESSION['username']);
         
         // Перенаправляем пользователя на главную страницу
         header("Location: /");

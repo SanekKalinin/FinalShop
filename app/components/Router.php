@@ -79,12 +79,20 @@ class Router
                 /* Вызываем необходимый метод ($actionName) у определенного 
                  * класса ($controllerObject) с заданными ($parameters) параметрами
                  */
-                $result = call_user_func_array(array($controllerObject, $actionName), $parameters);
+
+
+              $result = call_user_func_array(array($controllerObject, $actionName), $parameters);
 
                 // Если метод контроллера успешно вызван, завершаем работу роутера
                 if ($result != null) {
                     break;
-                }
+                } else  throw new Exception('Выберете пожалуйста другой товар или категорию');
+
+                    /* $controllerObject = new ErrorController;
+                    $actionName = actionNotFound;
+                    $parameters = '404';
+                    $result = call_user_func_array(array($controllerObject, $actionName), $parameters); */
+                
             }
         }
     }

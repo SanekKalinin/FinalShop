@@ -3,22 +3,15 @@
 /**
  * Класс Order - модель для работы с заказами
  */
-class Order
+class Order extends Models
 {
 
-    /**
-     * Сохранение заказа 
-     * @param string $userName <p>Имя</p>
-     * @param string $userPhone <p>Телефон</p>
-     * @param string $userComment <p>Комментарий</p>
-     * @param integer $userId <p>id пользователя</p>
-     * @param array $products <p>Массив с товарами</p>
-     * @return boolean <p>Результат выполнения метода</p>
-     */
+    // Сохранение заказа 
+  
     public function save($userName, $userPhone, $userComment, $userId, $products)
     {
         // Соединение с БД
-        $db = Db::getConnection();
+        //  $db = Db::getConnection();
 
         // Текст запроса к БД
         $sql = 'INSERT INTO product_order (user_name, user_phone, user_comment, user_id, products) '
@@ -26,7 +19,7 @@ class Order
 
         $products = json_encode($products);
 
-        $result = $db->prepare($sql);
+        $result = $this->db->prepare($sql);
         $result->bindParam(':user_name', $userName, PDO::PARAM_STR);
         $result->bindParam(':user_phone', $userPhone, PDO::PARAM_STR);
         $result->bindParam(':user_comment', $userComment, PDO::PARAM_STR);
@@ -36,17 +29,15 @@ class Order
         return $result->execute();
     }
 
-    /**
-     * Возвращает список заказов
-     * @return array <p>Список заказов</p>
-     */
+  // Возвращает список заказов
+    
     public function getOrdersList()
     {
         // Соединение с БД
-        $db = Db::getConnection();
+        // $db = Db::getConnection();
 
         // Получение и возврат результатов
-        $result = $db->query('SELECT id, user_name, user_phone, date, status FROM product_order ORDER BY id DESC');
+        $result = $this->db->query('SELECT id, user_name, user_phone, date, status FROM product_order ORDER BY id DESC');
         $ordersList = array();
         $i = 0;
         while ($row = $result->fetch()) {
@@ -63,9 +54,7 @@ class Order
     /**
      * Возвращает текстое пояснение статуса для заказа :<br/>
      * <i>1 - Новый заказ, 2 - В обработке, 3 - Доставляется, 4 - Закрыт</i>
-     * @param integer $status <p>Статус</p>
-     * @return string <p>Текстовое пояснение</p>
-     */
+ */
     public static function getStatusText($status)
     {
         switch ($status) {
@@ -84,20 +73,17 @@ class Order
         }
     }
 
-    /**
-     * Возвращает заказ с указанным id 
-     * @param integer $id <p>id</p>
-     * @return array <p>Массив с информацией о заказе</p>
-     */
+  // Возвращает заказ с указанным id 
+     
     public function getOrderById($id)
     {
         // Соединение с БД
-        $db = Db::getConnection();
+       // $db = Db::getConnection();
 
         // Текст запроса к БД
         $sql = 'SELECT * FROM product_order WHERE id = :id';
 
-        $result = $db->prepare($sql);
+        $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id, PDO::PARAM_INT);
 
         // Указываем, что хотим получить данные в виде массива
@@ -110,39 +96,28 @@ class Order
         return $result->fetch();
     }
 
-    /**
-     * Удаляет заказ с заданным id
-     * @param integer $id <p>id заказа</p>
-     * @return boolean <p>Результат выполнения метода</p>
-     */
+    //  Удаляет заказ с заданным id
+   
     public function deleteOrderById($id)
     {
         // Соединение с БД
-        $db = Db::getConnection();
+        // $db = Db::getConnection();
 
         // Текст запроса к БД
         $sql = 'DELETE FROM product_order WHERE id = :id';
 
         // Получение и возврат результатов. Используется подготовленный запрос
-        $result = $db->prepare($sql);
+        $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id, PDO::PARAM_INT);
         return $result->execute();
     }
 
-    /**
-     * Редактирует заказ с заданным id
-     * @param integer $id <p>id товара</p>
-     * @param string $userName <p>Имя клиента</p>
-     * @param string $userPhone <p>Телефон клиента</p>
-     * @param string $userComment <p>Комментарий клиента</p>
-     * @param string $date <p>Дата оформления</p>
-     * @param integer $status <p>Статус <i>(включено "1", выключено "0")</i></p>
-     * @return boolean <p>Результат выполнения метода</p>
-     */
+   // Редактирует заказ с заданным id
+     
     public function updateOrderById($id, $userName, $userPhone, $userComment, $date, $status)
     {
         // Соединение с БД
-        $db = Db::getConnection();
+        // $db = Db::getConnection();
 
         // Текст запроса к БД
         $sql = "UPDATE product_order
@@ -155,7 +130,7 @@ class Order
             WHERE id = :id";
 
         // Получение и возврат результатов. Используется подготовленный запрос
-        $result = $db->prepare($sql);
+        $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id, PDO::PARAM_INT);
         $result->bindParam(':user_name', $userName, PDO::PARAM_STR);
         $result->bindParam(':user_phone', $userPhone, PDO::PARAM_STR);

@@ -4,13 +4,11 @@
  * Класс Cart
  * Компонент для работы корзиной
  */
-class Cart
+class Cart extends Models
 {
 
     /**
      * Добавление товара в корзину (сессию)
-     * @param int $id <p>id товара</p>
-     * @return integer <p>Количество товаров в корзине</p>
      */
     public function addProduct($id)
     {
@@ -44,7 +42,6 @@ class Cart
 
     /**
      * Подсчет количество товаров в корзине (в сессии)
-     * @return int <p>Количество товаров в корзине</p>
      */
     public static function countItems()
     {
@@ -66,7 +63,6 @@ class Cart
     /**
      * Возвращает массив с идентификаторами и количеством товаров в корзине<br/>
      * Если товаров нет, возвращает false;
-     * @return mixed: boolean or array
      */
     public function getProducts()
     {
@@ -78,8 +74,6 @@ class Cart
 
     /**
      * Получаем общую стоимость переданных товаров
-     * @param array $products <p>Массив с информацией о товарах</p>
-     * @return integer <p>Общая стоимость</p>
      */
     public function getTotalPrice($products)
     {
@@ -112,8 +106,7 @@ class Cart
 
     /**
      * Удаляет товар с указанным id из корзины
-     * @param integer $id <p>id товара</p>
-     */
+          */
     public function deleteProduct($id)
     {
         // Получаем массив с идентификаторами и количеством товаров в корзине

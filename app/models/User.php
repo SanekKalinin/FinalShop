@@ -3,15 +3,15 @@
 /**
  * Класс User - модель для работы с пользователями
  */
-class User
+class User extends Models
 {
 
     // Регистрация пользователя 
      
-    public function register($userName, $email, $password,$firstName,$lastName)
+    public function register($userName, $email,$firstName,$lastName,$password)
     {
         // Соединение с БД
-        $db = Db::getConnection();
+       // $db = Db::getConnection();
         $salt=random_int(0, PHP_INT_MAX);
         $hashPass=md5($userName.$password.$salt);
         $reg_tocken=md5(time());
@@ -20,7 +20,7 @@ class User
                 . 'VALUES (:userName,:firstName, :lastName, :email,:reg_tocken, :salt, :hashPass)';
 
         // Получение и возврат результатов. Используется подготовленный запрос
-        $result = $db->prepare($sql);
+        $result = $this->db->prepare($sql);
         $result->bindParam(':userName', $userName, PDO::PARAM_STR);
         $result->bindParam(':firstName', $firstName, PDO::PARAM_STR);
         $result->bindParam(':lastName', $lastName, PDO::PARAM_STR);
@@ -28,7 +28,7 @@ class User
         $result->bindParam(':reg_tocken', $reg_tocken, PDO::PARAM_STR);
         $result->bindParam(':salt', $salt, PDO::PARAM_STR);
         $result->bindParam(':hashPass', $hashPass, PDO::PARAM_STR);
-        mail($email,'Завершение регистрации','Для завершения регистрации перейдите по ссылке http://shop/user='.$reg_tocken);
+        //mail($email,'Завершение регистрации','Для завершения регистрации перейдите по ссылке http://shop/user='.$reg_tocken);
         try {
         return $result->execute(); }
         catch(PDOException $e) {  
@@ -37,12 +37,12 @@ class User
     }
     // подтверждение регистрации
     public function registerValidation($reg_tocken,$userID) {
-        $db = Db::getConnection();
+        // $db = Db::getConnection();
         // готовим запрос
         $sql = 'SELECT :reg_tocken FROM user WHERE userID = :userID';
         
         // Получение результатов. Используется подготовленный запрос
-        $result = $db->prepare($sql);
+        $result = $this->db->prepare($sql);
         $result->bindParam(':reg_tocken', $reg_tocken, PDO::PARAM_STR);
         $result->bindParam(':userID', $userID, PDO::PARAM_STR);
         try {
@@ -59,15 +59,12 @@ class User
     }
     /**
      * Редактирование данных пользователя
-     * @param integer $id <p>id пользователя</p>
-     * @param string $userName <p>Имя</p>
-     * @param string $password <p>Пароль</p>
-     * @return boolean <p>Результат выполнения метода</p>
+     
      */
     public function edit($id, $userName, $password)
     {
         // Соединение с БД
-        $db = Db::getConnection();
+        // $db = Db::getConnection();
         $salt=random_int(0, PHP_INT_MAX);
         $hashPass=md5($userName.$password.$salt);
 
@@ -77,7 +74,7 @@ class User
             WHERE id = :id";
 
         // Получение и возврат результатов. Используется подготовленный запрос
-        $result = $db->prepare($sql);
+        $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id, PDO::PARAM_INT);
         $result->bindParam(':userName', $userName, PDO::PARAM_STR);
         $result->bindParam(':salt', $salt, PDO::PARAM_STR);
@@ -91,21 +88,19 @@ class User
 
     /**
      * Проверяем существует ли пользователь с заданными $email и $password
-     * @param string $email <p>E-mail</p>
-     * @param string $password <p>Пароль</p>
-     * @return mixed : integer user id or false
+   
      */
     public function userValidation($email, $password)
     {
         
         // Соединение с БД
-        $db = Db::getConnection();
+        //$db = Db::getConnection();
         
         // Текст запроса к БД
         $sql = 'SELECT * FROM user WHERE email = :email';
         
         // Получение результатов. Используется подготовленный запрос
-        $result = $db->prepare($sql);
+        $result = $this->db->prepare($sql);
 
         $result->bindParam(':email', $email, PDO::PARAM_STR);
         
@@ -120,73 +115,95 @@ class User
 
         // Обращаемся к записи
         $user = $result->fetch();
-        
+       // $user['tocken']=md5(time());
         if (md5($user['username'].$password.$user['salt'])==$user['hash']) {
-            // Если хэши совпадают, возвращаем id пользователя
-            return $user['id'];
+             //Если хэши совпадают, возвращаем id пользователя и создаем токен для куки
+          setcookie("userTocken",$user['tocken'],time()+60*60*24,$httponly=true);
+                                     
+          return $user['id'];
         }
         return false;
     }
 
-    /**
-     * Запоминаем пользователя
-     * @param integer $userId <p>id пользователя</p>
-     */
-    public function auth($userId)
+  // Запоминаем пользователя
+    
+    public function auth($userID)
     {
+             
          // Соединение с БД
-         $db = Db::getConnection();
-         
+         // $db = Db::getConnection();
+         /*
+         $user = $this->db->select('SELECT username, email,firstName, lastName, tocken FROM user WHERE userID = :userID', [
+             ':userId' => $user_id
+         ]);
+         */
          // Текст запроса к БД
-         $sql = 'SELECT username, email,firstName, lastName, tocken FROM user WHERE userID = :userID' ;
+         $sql = 'SELECT username, email,firstName, lastName, tocken FROM user WHERE id = :userID' ;
  
          // Получение и возврат результатов. Используется подготовленный запрос
-         $result = $db->prepare($sql);
+         
+         $result = $this->db->prepare($sql);
          $result->bindParam(':userID', $userID, PDO::PARAM_STR);
+         $result->setFetchMode(PDO::FETCH_ASSOC);
          
          try {
             $result->execute();
-            $_SESSION[] = $result->fetch();
-            setcookie("userTocken",$_SESSION['tocken'],time()+360000,$httponly=true); }
+            }
          catch(PDOException $e) {  
              echo $e->getMessage();  
                      }
         // Записываем идентификатор пользователя в сессию
-        
+         
+        return $_SESSION = $result->fetch();
+          
     }
 
     /**
      * Возвращает идентификатор пользователя, если он авторизирован.<br/>
      * Иначе перенаправляет на страницу входа
-     * @return string <p>Идентификатор пользователя</p>
-     */
+          */
     public function checkLogged()
     {
-        // Если сессия есть, вернем идентификатор пользователя
-        if (isset($_SESSION['user'])) {
-            return $_SESSION['user'];
+        // Если сессия есть, вернем идентификатор пользователя, браузер не закрывался
+        if (isset($_SESSION['username'])) {
+            return $_SESSION['username'];
+        }
+        // если браузер закрывался, проверяем куку
+        if (isset($_COOKIE["userTocken"])) {
+           // Соединение с БД
+        // $db = Db::getConnection();
+         
+         // Текст запроса к БД
+         $sql = 'SELECT username, email,firstName, lastName, tocken FROM user WHERE tocken = :tocken' ;
+ 
+         // Получение и возврат результатов. Используется подготовленный запрос
+         $result = $this->db->prepare($sql);
+         $result->bindParam(':tocken', $_COOKIE["userTocken"], PDO::PARAM_STR);
+         
+         try {
+            $result->execute();
+            $_SESSION = $result->fetch();
+            return $_SESSION['username'];}
+         catch(PDOException $e) {  
+             echo $e->getMessage();   
         }
 
         header("Location: /user/login");
     }
+        }
 
-    /**
-     * Проверяет является ли пользователь гостем
-     * @return boolean <p>Результат выполнения метода</p>
-     */
+    // Проверяет является ли пользователь гостем
+     
     public static function isGuest()
     {
-        if (isset($_SESSION['user'])) {
+        if (isset($_SESSION['username'])) {
             return false;
         }
         return true;
     }
 
-    /**
-     * Проверяет имя: не меньше, чем 2 символа
-     * @param string $userName <p>Имя</p>
-     * @return boolean <p>Результат выполнения метода</p>
-     */
+   // Проверяет имя: не меньше, чем 2 символа
+     
     public function checkName($userName)
     {
         if (strlen($userName) >= 2) {
@@ -195,11 +212,8 @@ class User
         return false;
     }
 
-    /**
-     * Проверяет телефон: не меньше, чем 10 символов
-     * @param string $phone <p>Телефон</p>
-     * @return boolean <p>Результат выполнения метода</p>
-     */
+    // Проверяет телефон: не меньше, чем 10 символов
+    
     public  function checkPhone($phone)
     {
         if (strlen($phone) >= 10) {
@@ -208,11 +222,8 @@ class User
         return false;
     }
 
-    /**
-     * Проверяет имя: не меньше, чем 8 символов
-     * @param string $password <p>Пароль</p>
-     * @return boolean <p>Результат выполнения метода</p>
-     */
+   // Проверяет имя: не меньше, чем 8 символов
+     
     public  function checkPassword($password)
     {
         if (strlen($password) >= 8) {
@@ -221,11 +232,8 @@ class User
         return false;
     }
 
-    /**
-     * Проверяет email
-     * @param string $email <p>E-mail</p>
-     * @return boolean <p>Результат выполнения метода</p>
-     */
+    // Проверяет email
+     
     public  function checkEmail($email)
     {
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -234,21 +242,18 @@ class User
         return false;
     }
 
-    /**
-     * Проверяет не занят ли email другим пользователем
-     * @param type $email <p>E-mail</p>
-     * @return boolean <p>Результат выполнения метода</p>
-     */
+    // Проверяет не занят ли email другим пользователем
+     
     public  function checkEmailExists($email)
     {
         // Соединение с БД        
-        $db = Db::getConnection();
+       // $db = Db::getConnection();
 
         // Текст запроса к БД
         $sql = 'SELECT COUNT(*) FROM user WHERE email = :email';
 
         // Получение результатов. Используется подготовленный запрос
-        $result = $db->prepare($sql);
+        $result = $this->db->prepare($sql);
         $result->bindParam(':email', $email, PDO::PARAM_STR);
         try {
              $result->execute(); }
@@ -257,31 +262,27 @@ class User
                         }
 
         if ($result->fetchColumn()) {
-            echo $result;
-            die();
+            
             return true;
         }
         return false;
     }
 
-    /**
-     * Возвращает пользователя с указанным id
-     * @param integer $id <p>id пользователя</p>
-     * @return array <p>Массив с информацией о пользователе</p>
-     */
+    // Возвращает пользователя с указанным id
+  
     public  function getUserById($id)
     {
         // Соединение с БД
-        $db = Db::getConnection();
+      // $db = Db::getConnection();
 
         // Текст запроса к БД
         $sql = 'SELECT * FROM user WHERE id = :id';
 
         // Получение и возврат результатов. Используется подготовленный запрос
-        $result = $db->prepare($sql);
+        $result = $this->db->prepare($sql);
         $result->bindParam(':id', $id, PDO::PARAM_INT);
 
-        // Указываем, что хотим получить данные в виде массива
+        // Указываем, что хотим получить данные в виде ассоциативного массива
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $result->execute();
 

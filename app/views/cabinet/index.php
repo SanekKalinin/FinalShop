@@ -6,9 +6,10 @@
 
             <h3>Кабинет пользователя</h3>
             
-            <h4>Привет, <?php echo $user['username'];?>!</h4>
+            <h4>Привет, <?php echo $_SESSION['firstName'];?>!</h4>
             <ul>
                 <li><a href="/cabinet/edit">Редактировать данные</a></li>
+                <?php var_dump ($_SESSION);?>
                 <!--<li><a href="/cabinet/history">Список покупок</a></li>-->
             </ul>
             
